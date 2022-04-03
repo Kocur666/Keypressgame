@@ -10,9 +10,14 @@
 #include <sysinfoapi.h>
 #include <windows.h>
 
+void SortTopScore();
+void PlayGame();
+void ShowMainMenu();
+void ShowTopScore();
+
 void ShowMainMenu(){
 
-clear();
+//clear();
 printf("--------------------------------------\n");
 printf("1.  Play New game                     \n");
 printf("2.  Show Top scores                   \n");

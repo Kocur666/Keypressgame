@@ -10,6 +10,7 @@
 
 using namespace std;
 
+void SortTopScore();
 void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
@@ -18,11 +19,13 @@ class Wynik;
 int main()
 {
     //Wynik aa, bb, cc, dd, ee; //populating Top Scores
-    Wynik(63345266);
-    Wynik(6345356);
-    Wynik(5546456, "Adam");  //populating Top Scores
+    // Wynik(63345266);
+    // Wynik(6345356);
+    // Wynik(5546456, "Adam");  //populating Top Scores
+
     clear();
-    ShowMainMenu(); 
+    LoadTopScore();
+    ShowMainMenu();
 
     // Showing runtime
     Runtime = (GetTickCount()- TimeStart);

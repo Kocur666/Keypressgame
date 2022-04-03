@@ -12,6 +12,7 @@
 #include <vector>
 #include <climits>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,9 +25,11 @@ DWORD TimeStart = GetTickCount();
 DWORD old = GetTickCount();
 DWORD Runtime{};
 
+void SortTopScore();
 void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
+void LoadTopScore();
 class Wynik;
 
 string writeword {"A jakby tak podejsc"};
@@ -83,6 +86,23 @@ public:
     string Name;
     long int Score;
 };
+
+void LoadTopScore(){
+    string Name;
+    long int Score;
+    fstream file ("top.txt", std::ofstream::in);
+    if (file.is_open()){
+    auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
+    file.seekg(0);
+    for (int i=0; i < (Wersy +1); i++){
+        file >> Name >> Score;
+        Wynik* set1 = new Wynik (Score, Name);   
+    }
+    } else {
+        cout << "Cannot open Top Scores file to load.\n";
+    }
+    file.close();
+}
 
 vector<Wynik*> Wynik::objList; // for Wynik class declaration
 
@@ -180,6 +200,8 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
             cout << "Srednia: " << (Runtime/size(writeword)) << " ms na znak" << endl;
             //Wynik(500,"Gracz1"); //why crashing system ???
             Wynik* new1 = new Wynik ((Runtime),"Gracz1");
+            new1->Save();
+            SortTopScore();
             Sleep(1000);
         } else {
             cout << "Przerwana gra." << endl;
@@ -194,10 +216,35 @@ void ShowTopScore(){
         //cout << "ilosc objektow: " <<Wynik::getAllObjects().size() << endl;
         Wynik_pointer = Wynik::getAllObjects()[i];
         Wynik_pointer->Print();
-        Wynik_pointer->Save();
+        // Wynik_pointer->Save(); //we dont want to save twice now
         //cout << Wynik_pointer->Print() << " " << Wynik_pointer->Name << " " << Wynik_pointer->Score <<endl;
     }
     cout << "Aby wyjsc nacisnij dowolny klawisz." << endl;
     getch();
 } 
+
+void SortTopScore(){
+    string line;
+    fstream inFile;
+    inFile.open("top.txt");
+    if (inFile.is_open()) {
+        std::vector<std::pair<int, std::string> > score_vector;
+        std::string name;
+        long int score;
+        while (inFile >> name >> score) {
+            score_vector.push_back(std::make_pair(score, name));
+            std::cout << line << '\n';
+        }
+        std::sort(score_vector.begin(), score_vector.end());
+            inFile.clear();
+            inFile.seekg(0);
+        for(auto it = score_vector.begin(); it != score_vector.end(); ++it){
+            inFile << it->second << " " << it->first << endl;
+        }
+    }
+    else
+        std::cout << "Unable to open text";
+    inFile.close();
+}
+
 #endif 
