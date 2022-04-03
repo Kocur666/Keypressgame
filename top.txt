@@ -2,6 +2,8 @@ Kocur 1625
 Gracz1 1641
 Kocur 1719
 Akutor 1781
+Aktor 1813
+Player1 1813
 Gracz1 1828
 Takoma 1828
 Barbara 1844

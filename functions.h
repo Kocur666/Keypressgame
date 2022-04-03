@@ -97,13 +97,14 @@ void LoadTopScore(){
     if (file.is_open()){
     auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
     file.seekg(0);
-    for (int i=0; i < (Wersy +1); i++){
+    for (int i=0; i < Wersy; i++){
         file >> Name >> Score;
         Wynik* set1 = new Wynik (Score, Name);   
     }
     } else {
         cout << "Cannot open Top Scores file to load.\n";
     }
+    file.seekg(ios_base::end);
     file.close();
 }
 
