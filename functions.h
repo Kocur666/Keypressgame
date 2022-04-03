@@ -16,52 +16,55 @@
 
 using namespace std;
 
+string Nickname {"Player1"};
 int c, ex;
 int escape, GraSkonczona = 0;
 int NrLiterki =0;
 int IsCorrect =0;
 char CharNeeded {};
+bool UseBoold =1;
 DWORD TimeStart = GetTickCount();    
 DWORD old = GetTickCount();
 DWORD Runtime{};
 
-void SortTopScore();
+void SortFileTopScore();
 void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
 void LoadTopScore();
 class Wynik;
 
-string writeword {"A jakby tak podejsc"};
+string writeword {"A jakby tak podejsc"};  //Main text to write to check speed
 
 class Wynik {
 private:
-    static vector<Wynik*> objList;
+    static vector<Wynik> objList;
 public:
-    static vector<Wynik*> getAllObjects(){
+    static vector<Wynik> getAllObjects(){
+        std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;}); 
         return objList;
     }
     Wynik(){
-        objList.push_back(this);
         Name = "Default";
         Score = 0;
+        objList.push_back(*this);
     }
     Wynik(long int Score_param){
-        objList.push_back(this);
         Name = "Default";
         Score=Score_param;
+        objList.push_back(*this);
     }
     Wynik(long int Score_param, string Name_param){
-        objList.push_back(this);
         Name = Name_param;
         Score = Score_param;
+        objList.push_back(*this);
     }
     void Print(){
-        cout << "Gracz: " << this->Name;
+        cout << "Player: " << this->Name;
         for(int i=0; i<(15 - this->Name.size()); i++){ //Lined to 15 char Name
             cout << " ";
         }
-        cout << " Wynik: "; //Lined to 10 chars Score
+        cout << " Score: "; //Lined to 10 chars Score
         int digits = 0;
         int check = this->Score;
         if (check == 0) digits = 1;
@@ -104,7 +107,7 @@ void LoadTopScore(){
     file.close();
 }
 
-vector<Wynik*> Wynik::objList; // for Wynik class declaration
+vector<Wynik> Wynik::objList; // for Wynik class declaration
 
 std::ostream& bold_on(std::ostream& os)  // bolding terminal characters
 {
@@ -122,7 +125,7 @@ void timecheck(DWORD &old){  // checking time passed in ms using windows.h ticke
     cout << "Passed ms: " << DiffTime << endl;
 }
 
-void ShowBolded(int NrLiterki, string writeword){ //Show bolded type to text with bolded char to paste
+void ShowBolded(int NrLiterki, string writeword, bool UseBoold){ //Show bolded type to text with bolded char to paste
     for(int x =0; x < size(writeword); x++) {
         if(writeword[x]==32){
             if(x==NrLiterki){
@@ -134,7 +137,12 @@ void ShowBolded(int NrLiterki, string writeword){ //Show bolded type to text wit
         }
         else{
         if(x==NrLiterki){
+                if(UseBoold){
                 cout << bold_on << writeword[x] << bold_off;
+                }
+                else {
+                cout << writeword[x];   
+                }
             }
             else {
                 cout << writeword[x];
@@ -143,12 +151,17 @@ void ShowBolded(int NrLiterki, string writeword){ //Show bolded type to text wit
     }
 }
 
-void PrintSpace(int NrLiterki, string writeword){ //Shows space as falseSpace character and bolds other chars for single char show
+void PrintSpace(int NrLiterki, string writeword, bool UseBoold){ //Shows space as falseSpace character and bolds other chars for single char show
     if(writeword[NrLiterki]==32){
         cout << (char)falseSpace;
     }
     else {
-        cout << bold_on << writeword[NrLiterki] << bold_off;
+        if (UseBoold) {
+            cout << bold_on << writeword[NrLiterki] << bold_off;
+        }
+        else {
+            cout << writeword[NrLiterki];
+        }
     }
 }
 
@@ -172,10 +185,10 @@ void clear() { //Clear screen and go to 0,0 on windows
 void PlayGame(){
 for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
             clear();
-            cout << "Nacisnij teraz: ";
-            PrintSpace (NrLiterki, writeword);
-            cout << endl << "Wpisz jak najszybciej haslo: " << endl;
-            ShowBolded(NrLiterki, writeword);       
+            cout << "Now press: ";
+            PrintSpace (NrLiterki, writeword, UseBoold);
+            cout << endl << "Paste as fast as You can: " << endl;
+            ShowBolded(NrLiterki, writeword, UseBoold);       
             c = getch();
             if(NrLiterki==0){
                 old = GetTickCount();
@@ -196,34 +209,41 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
         clear();
         Runtime = (GetTickCount()- old);
         if (GraSkonczona == 1){
-            cout << "Haslo wpisane w czasie: " << bold_on << Runtime << bold_off << " ms.\n";
-            cout << "Srednia: " << (Runtime/size(writeword)) << " ms na znak" << endl;
-            //Wynik(500,"Gracz1"); //why crashing system ???
-            Wynik* new1 = new Wynik ((Runtime),"Gracz1");
+            if (UseBoold){
+                cout << "Pharse written in: " << bold_on << Runtime << bold_off << " ms.\n";
+            }
+            else {
+                cout << "Pharse written in: " << Runtime << " ms.\n";
+            }
+            cout << "Average: " << (Runtime/size(writeword)) << " ms per char" << endl;
+            Wynik *new1 = new Wynik ((Runtime), Nickname);
             new1->Save();
-            SortTopScore();
             Sleep(1000);
         } else {
-            cout << "Przerwana gra." << endl;
+            cout << "Game was interrupted." << endl;
         }
     }
 
 void ShowTopScore(){
-    Wynik *Wynik_pointer;
-    cout << "------------Top Scores---------------" <<endl;
-    for (int i=0;i<Wynik::getAllObjects().size();i++){
-        //cout << Wynik::getAllObjects()[i]->Name << " " << Wynik::getAllObjects()[i]->Score << endl;
-        //cout << "ilosc objektow: " <<Wynik::getAllObjects().size() << endl;
-        Wynik_pointer = Wynik::getAllObjects()[i];
-        Wynik_pointer->Print();
-        // Wynik_pointer->Save(); //we dont want to save twice now
-        //cout << Wynik_pointer->Print() << " " << Wynik_pointer->Name << " " << Wynik_pointer->Score <<endl;
+    vector<Wynik>::iterator it;
+    int pager = 0;
+    auto list = Wynik::getAllObjects();
+    clear();
+    cout << "--------       TOP SCORE      ----------" << endl;
+    for (it = list.begin(); it!=list.end(); ++it ){
+        pager++;
+        it->Print();
+        if(pager==20){
+            pager=0;
+            cout << "Press any key to show more." << endl;
+            getch();
+        }
     }
-    cout << "Aby wyjsc nacisnij dowolny klawisz." << endl;
+    cout << "Press any key to continue." << endl;
     getch();
 } 
 
-void SortTopScore(){
+void SortFileTopScore(){
     string line;
     fstream inFile;
     inFile.open("top.txt");
@@ -243,7 +263,7 @@ void SortTopScore(){
         }
     }
     else
-        std::cout << "Unable to open text";
+        std::cout << "Unable to open top.txt";
     inFile.close();
 }
 

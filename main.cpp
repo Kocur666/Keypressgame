@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void SortTopScore();
+void SortFileTopScore();
 void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
@@ -18,17 +18,17 @@ class Wynik;
 
 int main()
 {
-    //Wynik aa, bb, cc, dd, ee; //populating Top Scores
-    // Wynik(63345266);
-    // Wynik(6345356);
-    // Wynik(5546456, "Adam");  //populating Top Scores
-
     clear();
-    LoadTopScore();
-    ShowMainMenu();
+    LoadTopScore();  // Load Top score from file top.txt
+    ShowMainMenu();  // Shows Main menu
 
     // Showing runtime
     Runtime = (GetTickCount()- TimeStart);
-    cout << "Program pracowal:" << Runtime << " milisekund lub inaczej: " << bold_on << (Runtime/1000) << " pelnych sekund" << bold_off << endl;
+    if (UseBoold){
+        cout << "Program was running:" << Runtime << " miliseconds or less precise: " << bold_on << (Runtime/1000) << " full seconds" << bold_off << endl;
+    }
+    else {
+        cout << "Program was running:" << Runtime << " miliseconds or less precise: " <<  (Runtime/1000) << " full seconds" << endl;
+    }
     return 0;
 }

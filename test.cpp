@@ -42,25 +42,26 @@ public:
 
 class Wynik {
 private:
-    static vector<Wynik*> objList;
+    static vector<Wynik> objList;
 public:
-    static vector<Wynik*> getAllObjects(){
+    static vector<Wynik> getAllObjects(){
+        std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;}); 
         return objList;
     }
     Wynik(){
-        objList.push_back(this);
         Name = "Default";
         Score = 0;
+        objList.push_back(*this);
     }
     Wynik(long int Score_param){
-        objList.push_back(this);
         Name = "Default";
         Score=Score_param;
+        objList.push_back(*this);
     }
     Wynik(long int Score_param, string Name_param){
-        objList.push_back(this);
         Name = Name_param;
         Score = Score_param;
+        objList.push_back(*this);
     }
     void Print(){
         cout << "Gracz: " << this->Name;
@@ -98,7 +99,7 @@ public:
     long int Score;
 };
 
-vector<Wynik*> Wynik::objList; // for Wynik class declaration
+vector<Wynik> Wynik::objList; // for Wynik class declaration
 
 main(){
 
@@ -123,17 +124,32 @@ ifstream inFile;
     else
         std::cout << "Unable to open text";
 
+vector<Wynik> listofWynik;
 
- Wynik(5546456, "Adam");
- Wynik(554646, "Adam");
- Wynik(556456, "Adam");
- Wynik(55646, "Adam");
- Wynik(5546, "Adam");
+ Wynik *w1 = new Wynik(5546456, "Adam");
+ listofWynik.push_back(*w1);
+ Wynik *w2 = new Wynik(554645, "Adam1");
+ listofWynik.push_back(*w2);
+ Wynik *w3 = new Wynik(55464, "Adam2");
+ listofWynik.push_back(*w3);
+ Wynik *w4 = new Wynik(5546, "Adam3");
+ listofWynik.push_back(*w4);
+ Wynik *w5 = new Wynik(554, "Adam4");
+ listofWynik.push_back(*w5);
+ Wynik *w6 = new Wynik(55, "Adam5");
+ listofWynik.push_back(*w6);
+ std::sort(listofWynik.begin(), listofWynik.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;});
+ vector<Wynik>::iterator it;
 
-
-
- for (int i=0;i<Wynik::getAllObjects().size();i++){
-     cout << Wynik::getAllObjects()[i]->Name << " " << Wynik::getAllObjects()[i]->Score << endl;
-  // std::cout<<Wynik::getAllObjects()[i]<<std::endl;
- }
+for (it = listofWynik.begin(); it!=listofWynik.end(); ++it){
+    cout << it->Name <<" "<< it->Score << endl;
+}
+auto list = Wynik::getAllObjects();
+for (it = list.begin(); it!=list.end(); ++it ){
+    cout << it->Name <<" "<< it->Score << endl;
+}
+ //for (int i=0;i<Wynik::getAllObjects().size();i++){
+ //    cout << *Wynik::getAllObjects()[i]->Name << " " << *Wynik::getAllObjects()[i]->Score << endl;
+ //  std::cout<<Wynik::getAllObjects()[i]<<std::endl;
+ //}
 }
