@@ -16,7 +16,7 @@ clear();
 printf("--------------------------------------\n");
 printf("1.  Play New game                     \n");
 printf("2.  Show Top scores                   \n");
-printf("3.  Change config files               \n");
+printf("3.  Change config files(add topscore) \n");
 printf("ESC EXIT GAME                         \n");
 printf("--------------------------------------\n");
 
@@ -33,8 +33,8 @@ switch(int ex = getch())
             break;
         case 51:
             clear();
-            cout << endl << "Pressed 3" << endl;  // key 3
-            cout << "Not implemented yet" <<endl;
+            // cout << endl << "Pressed 3" << endl;  // key 3
+            // cout << "Not implemented yet" <<endl;
             Wynik();
             break;
         case 27:

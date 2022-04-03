@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <vector>
 #include <climits>
+#include <fstream>
 
 using namespace std;
 
@@ -54,10 +55,10 @@ public:
     }
     void Print(){
         cout << "Gracz: " << this->Name;
-        for(int i=0; i<(15 - this->Name.size()); i++){
+        for(int i=0; i<(15 - this->Name.size()); i++){ //Lined to 15 char Name
             cout << " ";
         }
-        cout << " Wynik: ";
+        cout << " Wynik: "; //Lined to 10 chars Score
         int digits = 0;
         int check = this->Score;
         if (check == 0) digits = 1;
@@ -70,29 +71,38 @@ public:
         }  
         cout << this->Score << endl;
     }
+    void Save(){
+        fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
+        if (file.is_open()){
+        file << this->Name << " " << this->Score << endl;
+        file.close();
+        } else {
+            cout << "Cannot open Top Scores file to save.\n";
+        }
+    }
     string Name;
     long int Score;
 };
 
 vector<Wynik*> Wynik::objList; // for Wynik class declaration
 
-std::ostream& bold_on(std::ostream& os)
+std::ostream& bold_on(std::ostream& os)  // bolding terminal characters
 {
 return os << "\e[1m";
 }
 
-std::ostream& bold_off(std::ostream& os)
+std::ostream& bold_off(std::ostream& os)  // unbolding terminal characters
 {
 return os << "\e[0m";
 }
 
-void timecheck(DWORD &old){
+void timecheck(DWORD &old){  // checking time passed in ms using windows.h ticker
     DWORD NewTime = GetTickCount();
     DWORD DiffTime = NewTime - old;
     cout << "Passed ms: " << DiffTime << endl;
 }
 
-void ShowBolded(int NrLiterki, string writeword){
+void ShowBolded(int NrLiterki, string writeword){ //Show bolded type to text with bolded char to paste
     for(int x =0; x < size(writeword); x++) {
         if(writeword[x]==32){
             if(x==NrLiterki){
@@ -113,7 +123,7 @@ void ShowBolded(int NrLiterki, string writeword){
     }
 }
 
-void PrintSpace(int NrLiterki, string writeword){
+void PrintSpace(int NrLiterki, string writeword){ //Shows space as falseSpace character and bolds other chars for single char show
     if(writeword[NrLiterki]==32){
         cout << (char)falseSpace;
     }
@@ -122,7 +132,7 @@ void PrintSpace(int NrLiterki, string writeword){
     }
 }
 
-void clear() {
+void clear() { //Clear screen and go to 0,0 on windows
     COORD topLeft  = { 0, 0 };
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO screen;
@@ -179,12 +189,13 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
 void ShowTopScore(){
     Wynik *Wynik_pointer;
     cout << "------------Top Scores---------------" <<endl;
- for (int i=0;i<Wynik::getAllObjects().size();i++){
-    //cout << Wynik::getAllObjects()[i]->Name << " " << Wynik::getAllObjects()[i]->Score << endl;
-    //cout << "ilosc objektow: " <<Wynik::getAllObjects().size() << endl;
-    Wynik_pointer = Wynik::getAllObjects()[i];
-    Wynik_pointer->Print();
-    //cout << Wynik_pointer->Print() << " " << Wynik_pointer->Name << " " << Wynik_pointer->Score <<endl;
+    for (int i=0;i<Wynik::getAllObjects().size();i++){
+        //cout << Wynik::getAllObjects()[i]->Name << " " << Wynik::getAllObjects()[i]->Score << endl;
+        //cout << "ilosc objektow: " <<Wynik::getAllObjects().size() << endl;
+        Wynik_pointer = Wynik::getAllObjects()[i];
+        Wynik_pointer->Print();
+        Wynik_pointer->Save();
+        //cout << Wynik_pointer->Print() << " " << Wynik_pointer->Name << " " << Wynik_pointer->Score <<endl;
     }
     cout << "Aby wyjsc nacisnij dowolny klawisz." << endl;
     getch();
