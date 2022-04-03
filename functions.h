@@ -2,14 +2,79 @@
 #define FUNCTIONS_H
 
 #include "constants.h"
+#include "menus.h"
 #include <conio.h>
 #include <iostream>
 #include <ctime>
 #include <chrono>
 #include <sysinfoapi.h>
 #include <windows.h>
+#include <vector>
+#include <climits>
 
 using namespace std;
+
+int c, ex;
+int escape, GraSkonczona = 0;
+int NrLiterki =0;
+int IsCorrect =0;
+char CharNeeded {};
+DWORD TimeStart = GetTickCount();    
+DWORD old = GetTickCount();
+DWORD Runtime{};
+
+void PlayGame();
+void ShowMainMenu();
+void ShowTopScore();
+class Wynik;
+
+string writeword {"A jakby tak podejsc"};
+
+class Wynik {
+private:
+    static vector<Wynik*> objList;
+public:
+    static vector<Wynik*> getAllObjects(){
+        return objList;
+    }
+    Wynik(){
+        objList.push_back(this);
+        Name = "Default";
+        Score = 0;
+    }
+    Wynik(long int Score_param){
+        objList.push_back(this);
+        Name = "Default";
+        Score=Score_param;
+    }
+    Wynik(long int Score_param, string Name_param){
+        objList.push_back(this);
+        Name = Name_param;
+        Score = Score_param;
+    }
+    void Print(){
+        cout << "Gracz: " << this->Name;
+        for(int i=0; i<(15 - this->Name.size()); i++){
+            cout << " ";
+        }
+        cout << " Wynik: ";
+        int digits = 0;
+        int check = this->Score;
+        if (check == 0) digits = 1;
+        while (check) {
+            check /= 10;
+            digits++;
+        }
+        for (int i=0; i<(10-digits); i++){
+            cout << " ";
+        }  
+        cout << this->Score << endl;
+    }
+    string Name;
+    long int Score;
+};
+
+vector<Wynik*> Wynik::objList; // for Wynik class declaration
 
 std::ostream& bold_on(std::ostream& os)
 {
@@ -74,4 +139,54 @@ void clear() {
     SetConsoleCursorPosition(console, topLeft);
 }
 
-#endif
+void PlayGame(){
+for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
+            clear();
+            cout << "Nacisnij teraz: ";
+            PrintSpace (NrLiterki, writeword);
+            cout << endl << "Wpisz jak najszybciej haslo: " << endl;
+            ShowBolded(NrLiterki, writeword);       
+            c = getch();
+            if(NrLiterki==0){
+                old = GetTickCount();
+            }
+            if (c==27){
+                escape =1;
+                GraSkonczona=0;
+                cout << "Exiting..." << endl;
+                break;
+            }
+            else if (c!=writeword[NrLiterki]){
+                NrLiterki-- ;
+            }
+            else {
+                GraSkonczona = 1;
+            }
+        }
+        clear();
+        Runtime = (GetTickCount()- old);
+        if (GraSkonczona == 1){
+            cout << "Haslo wpisane w czasie: " << bold_on << Runtime << bold_off << " ms.\n";
+            cout << "Srednia: " << (Runtime/size(writeword)) << " ms na znak" << endl;
+            //Wynik(500,"Gracz1"); //why crashing system ???
+            Wynik* new1 = new Wynik ((Runtime),"Gracz1");
+            Sleep(1000);
+        } else {
+            cout << "Przerwana gra." << endl;
+        }
+    }
+
+void ShowTopScore(){
+    Wynik *Wynik_pointer;
+    cout << "------------Top Scores---------------" <<endl;
+ for (int i=0;i<Wynik::getAllObjects().size();i++){
+    //cout << Wynik::getAllObjects()[i]->Name << " " << Wynik::getAllObjects()[i]->Score << endl;
+    //cout << "ilosc objektow: " <<Wynik::getAllObjects().size() << endl;
+    Wynik_pointer = Wynik::getAllObjects()[i];
+    Wynik_pointer->Print();
+    //cout << Wynik_pointer->Print() << " " << Wynik_pointer->Name << " " << Wynik_pointer->Score <<endl;
+    }
+    cout << "Aby wyjsc nacisnij dowolny klawisz." << endl;
+    getch();
+} 
+#endif 
