@@ -22,7 +22,8 @@ int escape, GraSkonczona = 0;
 int NrLiterki =0;
 int IsCorrect =0;
 char CharNeeded {};
-bool UseBoold =1;
+bool UseBoold =1;  //config bool to use Bolded letters in terminal
+bool DebugMode =1;  //config bool to set debug mode
 DWORD TimeStart = GetTickCount();    
 DWORD old = GetTickCount();
 DWORD Runtime{};
@@ -41,6 +42,10 @@ private:
     static vector<Wynik> objList;
 public:
     static vector<Wynik> getAllObjects(){
+        if(DebugMode) {
+            cout << "DEBUG: Sorting all objects in Wynik list  --------" << endl;
+            cout << "Object are in ObjList at adress: " << &objList << endl;
+        }
         std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;}); 
         return objList;
     }
@@ -48,16 +53,33 @@ public:
         Name = "Default";
         Score = 0;
         objList.push_back(*this);
+        if(DebugMode) {
+            cout << "DEBUG: Constructing() Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+            cout << "Object push to list adress: " << &objList << endl;
+        }
     }
     Wynik(long int Score_param){
         Name = "Default";
         Score=Score_param;
         objList.push_back(*this);
+        if(DebugMode) {
+        cout << "DEBUG: Constructing(param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+        cout << "Object push to list adress: " << &objList << endl;
+        }
     }
     Wynik(long int Score_param, string Name_param){
         Name = Name_param;
         Score = Score_param;
         objList.push_back(*this);
+        if(DebugMode) {
+            cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+            cout << "Object push to list adress: " << &objList << endl;
+        }
+    }
+    ~Wynik(){
+        if(DebugMode) {
+            cout << "DEBUG: Descruting Class Wynik object: " << this << " Name: " << this->Name << " Score: " << this->Score <<endl;
+        }
     }
     void Print(){
         cout << "Player: " << this->Name;
@@ -167,6 +189,10 @@ void PrintSpace(int NrLiterki, string writeword, bool UseBoold){ //Shows space a
 }
 
 void clear() { //Clear screen and go to 0,0 on windows
+    if(DebugMode) {
+            cout << "Disabled Clear()" << endl;
+        }
+    else {
     COORD topLeft  = { 0, 0 };
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO screen;
@@ -181,6 +207,7 @@ void clear() { //Clear screen and go to 0,0 on windows
         screen.dwSize.X * screen.dwSize.Y, topLeft, &written
     );
     SetConsoleCursorPosition(console, topLeft);
+    }
 }
 
 void PlayGame(){

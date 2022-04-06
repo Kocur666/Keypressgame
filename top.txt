@@ -21,6 +21,7 @@ Gracz1 2172
 Akutor 2282
 Abba 2297
 Kitku 2313
+Player1 2328
 Gracz1 2422
 Gracz1 2437
 Abba 2469
@@ -34,6 +35,7 @@ Gracz1 3265
 Gracz1 3296
 Gracz1 3406
 Gracz1 4000
+Player1 4375
 Kitku 6891
 Adam 5546456
 Default 63345266

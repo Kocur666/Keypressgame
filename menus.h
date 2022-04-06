@@ -42,8 +42,11 @@ switch(int ex = getch())
         case 51:
             clear();
             printf("Use Boold in Terminal is set to: %s \n", UseBoold ? "true" : "false");
+            printf("DEBUG Mode is set to: %s \n", DebugMode ? "true" : "false");
             cout << "To set UseBoold to false press 0\n" <<endl;
             cout << "To set UseBoold to true press  1\n" <<endl;
+            cout << "To set DebugMode to false press 2\n" <<endl;
+            cout << "To set DebugMode to true press  3\n" <<endl;
             switch(int ex2 = getch())
                 {
                 case 48:
@@ -53,6 +56,14 @@ switch(int ex = getch())
                 case 49:
                     UseBoold = 1;
                     cout << "Use Boold set to True" << endl;
+                    break;
+                case 50:
+                    DebugMode = 0;
+                    cout << "Debug Mode set to False" << endl;
+                    break;
+                case 51:
+                    UseBoold = 1;
+                    cout << "Debug Mode set to true" << endl;
                     break;
                 default:
                     clear();
