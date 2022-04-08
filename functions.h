@@ -41,6 +41,9 @@ class Wynik {
 private:
     static vector<Wynik> objList;
 public:
+    string Name;
+    long int Score;
+
     static vector<Wynik> getAllObjects(){
         if(DebugMode) {
             cout << "DEBUG: Sorting all objects in Wynik list  --------" << endl;
@@ -49,39 +52,47 @@ public:
         std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;}); 
         return objList;
     }
-    Wynik(){
-        Name = "Default";
-        Score = 0;
-        objList.push_back(*this);
-        if(DebugMode) {
-            cout << "DEBUG: Constructing() Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
-            cout << "Object push to list adress: " << &objList << endl;
-        }
-    }
-    Wynik(long int Score_param){
-        Name = "Default";
-        Score=Score_param;
-        objList.push_back(*this);
-        if(DebugMode) {
-        cout << "DEBUG: Constructing(param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+    Wynik();
+    Wynik(long int Score_param);
+    Wynik(long int Score_param, string Name_param);
+    ~Wynik();
+    void Print();
+    void Save();
+};
+//declaring class functions
+
+Wynik::Wynik(){
+    Name = "Default";
+    Score = 0;
+    objList.push_back(*this);
+    if(DebugMode) {
+        cout << "DEBUG: Constructing() Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
         cout << "Object push to list adress: " << &objList << endl;
-        }
     }
-    Wynik(long int Score_param, string Name_param){
-        Name = Name_param;
-        Score = Score_param;
-        objList.push_back(*this);
-        if(DebugMode) {
-            cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
-            cout << "Object push to list adress: " << &objList << endl;
-        }
+}
+
+Wynik::Wynik(long int Score_param) : Score(Score_param) {
+    Name = "Default";
+    objList.push_back(*this);
+    if(DebugMode) {
+    cout << "DEBUG: Constructing(param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+    cout << "Object push to list adress: " << &objList << endl;
     }
-    ~Wynik(){
-        if(DebugMode) {
-            cout << "DEBUG: Descruting Class Wynik object: " << this << " Name: " << this->Name << " Score: " << this->Score <<endl;
-        }
+}
+Wynik::Wynik(long int Score_param, string Name_param) : Name (Name_param) , Score(Score_param){
+    objList.push_back(*this);
+    if(DebugMode) {
+        cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+        cout << "Object push to list adress: " << &objList << endl;
     }
-    void Print(){
+}
+
+Wynik::~Wynik(){
+    if(DebugMode) {
+        cout << "DEBUG: Descruting Class Wynik object: " << this << " Name: " << this->Name << " Score: " << this->Score <<endl;
+    }
+}
+void Wynik::Print(){
         cout << "Player: " << this->Name;
         for(int i=0; i<(15 - this->Name.size()); i++){ //Lined to 15 char Name
             cout << " ";
@@ -98,8 +109,8 @@ public:
             cout << " ";
         }  
         cout << this->Score << endl;
-    }
-    void Save(){
+}
+void Wynik::Save(){
         fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
         if (file.is_open()){
         file << this->Name << " " << this->Score << endl;
@@ -107,28 +118,74 @@ public:
         } else {
             cout << "Cannot open Top Scores file to save.\n";
         }
-    }
-    string Name;
-    long int Score;
-};
-
-void LoadTopScore(){
+}
+// rest of non class functions
+void LoadTopScore(){   //Loading top score from file top.txt
     string Name;
     long int Score;
     fstream file ("top.txt", std::ofstream::in);
     if (file.is_open()){
-    auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
-    file.seekg(0);
-    for (int i=0; i < Wersy; i++){
-        file >> Name >> Score;
-        Wynik* set1 = new Wynik (Score, Name);   
-    }
+        auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
+        file.seekg(0);
+        for (int i=0; i < Wersy; i++){
+            file >> Name >> Score;
+            Wynik* set1 = new Wynik (Score, Name);   
+        }
     } else {
         cout << "Cannot open Top Scores file to load.\n";
     }
     file.seekg(ios_base::end);
     file.close();
 }
+void LoadCfgFile(){  //Loading configuration file
+    string Name1, Name2, Name3;
+    string enter1, enter2, enter3;
+    bool val1, val2;
+    string val3;
+    fstream file ("configuration.cfg", std::ofstream::in);
+    if (file.is_open()){
+        file.seekg(0);
+        file >> Name1 >> enter1 >> val1;
+        file >> Name2 >> enter2 >> val2;
+        file >> Name3 >> enter3 >> val3;
+        if (Name1 == "UseBoold"){
+            UseBoold = val1;
+        } else {
+            cout << "Cannot find UseBoold value in config file." << endl;
+        }
+            if (Name2 == "DebugMode"){
+                DebugMode = val2;
+            } else {
+                cout << "Cannot find DebugMode value in config file." << endl;
+            }
+                if (Name3 == "Nickname"){
+                    Nickname = val3;
+                } else {
+                    cout << "Cannot find Nickname value in config file." << endl;
+                }
+                    if(DebugMode) {
+                        cout << "DEBUG: Loading configuration.cfg." << endl;
+                    }  
+    } else {
+        cout << "Cannot open configuration.cfg file to load.\n";
+    }
+    file.seekg(ios_base::end);
+    file.close();  
+}
+void SaveCfgFile(){  //Saving configuration file
+        fstream file ("configuration.cfg", std::ofstream::out);
+        if (file.is_open()){
+        file << "UseBoold = " << UseBoold << endl;
+        file << "DebugMode = " << DebugMode << endl;
+        file << "Nickname = " << Nickname << endl;
+            if(DebugMode) {
+                cout << "DEBUG: Saving configuration.cfg." << endl;
+            }
+        file.close();
+        } else {
+            cout << "Cannot open Top Scores file to save.\n";
+        }
+    }
 
 vector<Wynik> Wynik::objList; // for Wynik class declaration
 
@@ -167,8 +224,8 @@ void ShowBolded(int NrLiterki, string writeword, bool UseBoold){ //Show bolded t
                 cout << writeword[x];   
                 }
             }
-            else {
-                cout << writeword[x];
+        else {
+            cout << writeword[x];
             }    
         }
     }
@@ -190,7 +247,7 @@ void PrintSpace(int NrLiterki, string writeword, bool UseBoold){ //Shows space a
 
 void clear() { //Clear screen and go to 0,0 on windows
     if(DebugMode) {
-            cout << "Disabled Clear()" << endl;
+            cout << "DEBUG: Disabled Clear()" << endl;
         }
     else {
     COORD topLeft  = { 0, 0 };

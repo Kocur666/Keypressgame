@@ -18,6 +18,7 @@ class Wynik;
 
 int main()
 {
+    LoadCfgFile();
     clear();
     LoadTopScore();  // Load Top score from file top.txt
     ShowMainMenu();  // Shows Main menu

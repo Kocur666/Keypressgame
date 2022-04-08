@@ -1,5 +1,6 @@
 Kocur 1625
 Gracz1 1641
+Player1 1672
 Kocur 1719
 Akutor 1781
 Aktor 1813
@@ -37,6 +38,7 @@ Gracz1 3406
 Gracz1 4000
 Player1 4375
 Kitku 6891
+Player1 7265
 Adam 5546456
 Default 63345266
 Default 63345266
