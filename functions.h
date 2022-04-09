@@ -34,8 +34,18 @@ void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
 void LoadTopScore();
-std::ostream& bold_on();
-std::ostream& bold_off();
+std::ostream& bold_on(std::ostream& os)  // bolding terminal characters
+{
+return os << "\e[1m";
+}
+std::ostream& Redbold_on(std::ostream& os)  // bolding terminal characters
+{
+return os << "\e[1;31m";
+}
+std::ostream& bold_off(std::ostream& os)  // unbolding terminal characters
+{
+return os << "\e[0m";
+}
 class Wynik;
 
 string writeword_lev1 {"Krotki tekst na poczatek"};  //Main text to write to check speed
@@ -118,9 +128,16 @@ Wynik::~Wynik(){
 }
 void Wynik::Print(){
         if(UseBoold){
-            cout << "Player: " << "\e[1m" << this->Name << "\e[0m";
+            if (this->Name==Nickname) {
+            cout << "Player: " << Redbold_on << this->Name << bold_off;
             for(int i=0; i<(12 - this->Name.size()); i++){ //Lined to 12 char Name
                 cout << " ";
+            } 
+            }else {
+            cout << "Player: " << bold_on << this->Name << bold_off;
+            for(int i=0; i<(12 - this->Name.size()); i++){ //Lined to 12 char Name
+                cout << " ";
+            }
             }
         } else {
             cout << "Player: " << this->Name;
@@ -231,16 +248,6 @@ void SaveCfgFile(){  //Saving configuration file
 
 vector<Wynik> Wynik::objList; // for Wynik class declaration
 
-std::ostream& bold_on(std::ostream& os)  // bolding terminal characters
-{
-return os << "\e[1m";
-}
-
-std::ostream& bold_off(std::ostream& os)  // unbolding terminal characters
-{
-return os << "\e[0m";
-}
-
 void timecheck(DWORD &old){  // checking time passed in ms using windows.h ticker
     DWORD NewTime = GetTickCount();
     DWORD DiffTime = NewTime - old;
@@ -260,7 +267,7 @@ void ShowBolded(int NrLiterki, string writeword, bool UseBoold){ //Show bolded t
         else{
         if(x==NrLiterki){
                 if(UseBoold){
-                cout << bold_on << writeword[x] << bold_off;
+                cout << Redbold_on << writeword[x] << bold_off;
                 }
                 else {
                 cout << writeword[x];   
@@ -279,7 +286,7 @@ void PrintSpace(int NrLiterki, string writeword, bool UseBoold){ //Shows space a
     }
     else {
         if (UseBoold) {
-            cout << bold_on << writeword[NrLiterki] << bold_off;
+            cout << Redbold_on << writeword[NrLiterki] << bold_off;
         }
         else {
             cout << writeword[NrLiterki];
@@ -337,7 +344,7 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
         Runtime = (GetTickCount()- old);
         if (GraSkonczona == 1){
             if (UseBoold){
-                cout << "Pharse written in: " << bold_on << Runtime << bold_off << " ms.\n";
+                cout << "Pharse written in: " << Redbold_on << Runtime << bold_off << " ms.\n";
             }
             else {
                 cout << "Pharse written in: " << Runtime << " ms.\n";
