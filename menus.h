@@ -54,7 +54,6 @@ switch(int ex = getch())
                     break;
                 case 27:
                     clear();
-                    escape = 1;
                     cout << endl << "Pressed ESC" << endl;  // key esc
                     break;
                 default:
@@ -94,7 +93,6 @@ clear();
                     break;
                 case 27:
                     clear();
-                    escape = 1;
                     cout << endl << "Pressed ESC" << endl;  // key esc
                     break;
                 default:
