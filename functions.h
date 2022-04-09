@@ -15,15 +15,16 @@
 #include <algorithm>
 
 using namespace std;
-
+/// config variables
 string Nickname {"Player1"};
+bool UseBoold =1;  //config bool to use Bolded letters in terminal
+bool DebugMode =1;  //config bool to set debug mode
+/// ordinary variables
 int c, ex;
 int escape, GraSkonczona = 0;
 int NrLiterki =0;
 int IsCorrect =0;
 char CharNeeded {};
-bool UseBoold =1;  //config bool to use Bolded letters in terminal
-bool DebugMode =1;  //config bool to set debug mode
 DWORD TimeStart = GetTickCount();    
 DWORD old = GetTickCount();
 DWORD Runtime{};
@@ -35,7 +36,11 @@ void ShowTopScore();
 void LoadTopScore();
 class Wynik;
 
-string writeword {"A jakby tak podejsc"};  //Main text to write to check speed
+string writeword_lev1 {"Krotki tekst na poczatek"};  //Main text to write to check speed
+string writeword_lev2 {"Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu"};
+string writeword_lev3 {"Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu, ktory entuzjastycznie oklaskiwal przeliteratutalizowana i przekraykaturazowana sztuke"};
+
+//Classes
 
 class Wynik {
 private:
@@ -43,27 +48,34 @@ private:
 public:
     string Name;
     long int Score;
+    int Level;
 
     static vector<Wynik> getAllObjects(){
         if(DebugMode) {
             cout << "DEBUG: Sorting all objects in Wynik list  --------" << endl;
             cout << "Object are in ObjList at adress: " << &objList << endl;
         }
-        std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){return one.Score < two.Score;}); 
+        std::sort(objList.begin(), objList.end(), [](Wynik & one, Wynik & two){  //sorting bigger Level first, then Less Score = better
+            return (two.Level < one.Level) || 
+            ((one.Level == two.Level) && (one.Score < two.Score));
+            });
         return objList;
     }
     Wynik();
     Wynik(long int Score_param);
     Wynik(long int Score_param, string Name_param);
+    Wynik(long int Score_param, string Name_param, int Level_param);
     ~Wynik();
     void Print();
     void Save();
 };
+
 //declaring class functions
 
 Wynik::Wynik(){
     Name = "Default";
     Score = 0;
+    Level = 1;
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing() Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -73,6 +85,7 @@ Wynik::Wynik(){
 
 Wynik::Wynik(long int Score_param) : Score(Score_param) {
     Name = "Default";
+    Level = 1;
     objList.push_back(*this);
     if(DebugMode) {
     cout << "DEBUG: Constructing(param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -80,6 +93,15 @@ Wynik::Wynik(long int Score_param) : Score(Score_param) {
     }
 }
 Wynik::Wynik(long int Score_param, string Name_param) : Name (Name_param) , Score(Score_param){
+    objList.push_back(*this);
+    if(DebugMode) {
+        cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+        cout << "Object push to list adress: " << &objList << endl;
+    }
+}
+
+
+Wynik::Wynik(long int Score_param, string Name_param, int Level_param) : Name (Name_param) , Score(Score_param) , Level(Level_param) {
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -108,12 +130,13 @@ void Wynik::Print(){
         for (int i=0; i<(10-digits); i++){
             cout << " ";
         }  
-        cout << this->Score << endl;
+        cout << this->Score;
+        cout << "        Level: " << this->Level << endl;
 }
 void Wynik::Save(){
         fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
         if (file.is_open()){
-        file << this->Name << " " << this->Score << endl;
+        file << this->Name << " " << this->Score << " " << this->Level << endl;
         file.close();
         } else {
             cout << "Cannot open Top Scores file to save.\n";
@@ -123,13 +146,14 @@ void Wynik::Save(){
 void LoadTopScore(){   //Loading top score from file top.txt
     string Name;
     long int Score;
+    int Level;
     fstream file ("top.txt", std::ofstream::in);
     if (file.is_open()){
         auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
         file.seekg(0);
         for (int i=0; i < Wersy; i++){
-            file >> Name >> Score;
-            Wynik* set1 = new Wynik (Score, Name);   
+            file >> Name >> Score >> Level;
+            Wynik* set1 = new Wynik (Score, Name, Level);   
         }
     } else {
         cout << "Cannot open Top Scores file to load.\n";
@@ -267,7 +291,7 @@ void clear() { //Clear screen and go to 0,0 on windows
     }
 }
 
-void PlayGame(){
+void PlayGame(string writeword, int Lev){
 for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
             clear();
             cout << "Now press: ";
@@ -301,7 +325,7 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
                 cout << "Pharse written in: " << Runtime << " ms.\n";
             }
             cout << "Average: " << (Runtime/size(writeword)) << " ms per char" << endl;
-            Wynik *new1 = new Wynik ((Runtime), Nickname);
+            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev);
             new1->Save();
             Sleep(1000);
         } else {
@@ -328,6 +352,27 @@ void ShowTopScore(){
     getch();
 } 
 
+void ShowTopScore(int Lev){
+    vector<Wynik>::iterator it;
+    int pager = 0;
+    auto list = Wynik::getAllObjects();
+    clear();
+    cout << "--------       TOP SCORE      ----------" << endl;
+    for (it = list.begin(); it!=list.end(); ++it ){
+        if(it->Level == Lev){
+            pager++;
+            it->Print();
+            if(pager==20){
+                pager=0;
+                cout << "Press any key to show more." << endl;
+                getch();
+            }
+        }
+    }
+    cout << "Press any key to continue." << endl;
+    getch();
+} 
+/*
 void SortFileTopScore(){
     string line;
     fstream inFile;
@@ -350,6 +395,6 @@ void SortFileTopScore(){
     else
         std::cout << "Unable to open top.txt";
     inFile.close();
-}
-
+}  
+*/
 #endif 
