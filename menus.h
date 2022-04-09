@@ -17,7 +17,7 @@ void ShowTopScore();
 
 void ShowMainMenu(){
 
-//clear();
+clear();
 printf("--------------------------------------\n");
 printf("1.  Play New game                     \n");
 printf("2.  Show Top scores                   \n");
@@ -32,12 +32,76 @@ switch(int ex = getch())
     {
         case 49:
             clear();
-            cout << endl << "Pressed 1" << endl;//key 1
-            PlayGame();
+            printf("--------------------------------------\n");
+            printf("1.  Play Level 1 Easy                 \n");
+            printf("2.  Play Level 2 Medium               \n");
+            printf("3.  Play Level 3 Hard                 \n");
+            printf("                                      \n");
+            printf("ESC EXIT                              \n");
+            printf("                                      \n");
+            printf("Yourname: %s        \n", Nickname.c_str());
+            printf("--------------------------------------\n");
+            switch(int ex2 = getch())
+                {
+                case 49:
+                    PlayGame(writeword_lev1, 1);
+                    break;
+                case 50:
+                    PlayGame(writeword_lev2, 2);
+                    break;
+                case 51:
+                    PlayGame(writeword_lev3, 3);
+                    break;
+                case 27:
+                    clear();
+                    escape = 1;
+                    cout << endl << "Pressed ESC" << endl;  // key esc
+                    break;
+                default:
+                    clear();
+                    cout << endl << "Wrong key pressed - Aborting" << endl;  // not those keys
+                    break;
+                }
             break;
         case 50:
-            clear();        
-            ShowTopScore();
+clear();
+            printf("--------------------------------------\n");
+            printf("1.  Show Easy Top Score               \n");
+            printf("2.  Show Medium Top Score             \n");
+            printf("3.  Show Hard Top Score               \n");
+            printf("4.  Show All in One Top Score         \n");
+            printf("ESC EXIT                              \n");
+            printf("                                      \n");
+            printf("Yourname: %s        \n", Nickname.c_str());
+            printf("--------------------------------------\n");
+            switch(int ex2 = getch())
+                {
+                case 49:
+                    clear();
+                    ShowTopScore(1);
+                    break;
+                case 50:
+                    clear();
+                    ShowTopScore(2);
+                    break;
+                case 51:
+                    clear();
+                    ShowTopScore(3);
+                    break;
+                case 52:
+                    clear();
+                    ShowTopScore();
+                    break;
+                case 27:
+                    clear();
+                    escape = 1;
+                    cout << endl << "Pressed ESC" << endl;  // key esc
+                    break;
+                default:
+                    clear();
+                    cout << endl << "Wrong key pressed - Aborting" << endl;  // not those keys
+                    break;
+                }
             break;
         case 51:
             clear();
@@ -97,7 +161,7 @@ switch(int ex = getch())
     if (escape!=1){
         ShowMainMenu();
     } else {
-        SortFileTopScore();
+       // SortFileTopScore();
     }
 }
 

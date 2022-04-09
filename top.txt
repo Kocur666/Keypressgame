@@ -1,45 +1,11 @@
-Kocur 1625
-Gracz1 1641
-Player1 1672
-Kocur 1719
-Akutor 1781
-Aktor 1813
-Player1 1813
-Gracz1 1828
-Takoma 1828
-Barbara 1844
-Gracz1 1860
-Kocur 1875
-Gracz1 1937
-Kitku 1937
-Kitku 1937
-Gracz1 1984
-Gracz1 1984
-Gracz1 2016
-Gracz1 2094
-Aleks 2110
-Gracz1 2172
-Akutor 2282
-Abba 2297
-Kitku 2313
-Player1 2328
-Gracz1 2422
-Gracz1 2437
-Abba 2469
-Gracz1 2485
-Gracz1 2656
-Kitku 2657
-Gracz1 2719
-Gracz1 2766
-Gracz1 2953
-Gracz1 3265
-Gracz1 3296
-Gracz1 3406
-Gracz1 4000
-Player1 4375
-Kitku 6891
-Player1 7265
-Adam 5546456
-Default 63345266
-Default 63345266
-Default 63345266
+Kocur 2500 1
+Kocur 12547 2
+Kocur 31766 3
+Kocur 2610 1
+Kocur 2641 1
+Kocur 2828 1
+Kocur 11203 2
+Kocur 13844 2
+Kocur 13140 2
+Kocur 32671 3
+Kocur 30391 3
