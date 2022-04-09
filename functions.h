@@ -34,11 +34,13 @@ void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
 void LoadTopScore();
+std::ostream& bold_on();
+std::ostream& bold_off();
 class Wynik;
 
 string writeword_lev1 {"Krotki tekst na poczatek"};  //Main text to write to check speed
 string writeword_lev2 {"Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu"};
-string writeword_lev3 {"Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu, ktory entuzjastycznie oklaskiwal przeliteratutalizowana i przekraykaturazowana sztuke"};
+string writeword_lev3 {"Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu, ktory entuzjastycznie oklaskiwal przeliteraturalizowana i przekarykaturyzowana sztuke"};
 
 //Classes
 
@@ -115,23 +117,39 @@ Wynik::~Wynik(){
     }
 }
 void Wynik::Print(){
-        cout << "Player: " << this->Name;
-        for(int i=0; i<(15 - this->Name.size()); i++){ //Lined to 15 char Name
-            cout << " ";
+        if(UseBoold){
+            cout << "Player: " << "\e[1m" << this->Name << "\e[0m";
+            for(int i=0; i<(12 - this->Name.size()); i++){ //Lined to 12 char Name
+                cout << " ";
+            }
+        } else {
+            cout << "Player: " << this->Name;
+            for(int i=0; i<(12 - this->Name.size()); i++){ //Lined to 12 char Name
+                cout << " ";
+            }
         }
         cout << " Score: "; //Lined to 10 chars Score
         int digits = 0;
         int check = this->Score;
         if (check == 0) digits = 1;
-        while (check) {
-            check /= 10;
-            digits++;
-        }
+            while (check) {
+                check /= 10;
+                digits++;
+            }
         for (int i=0; i<(10-digits); i++){
             cout << " ";
         }  
-        cout << this->Score;
-        cout << "        Level: " << this->Level << endl;
+        if(UseBoold){
+            cout << "\e[1m" << this->Score << "\e[0m";
+        } else {
+            cout << this->Score;
+        }
+
+        if(UseBoold){
+            cout << "        Level: " << "\e[1m" << this->Level << "\e[0m" << endl;
+        } else {
+            cout << "        Level: " << this->Level << endl;
+        }
 }
 void Wynik::Save(){
         fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
@@ -333,7 +351,7 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
         }
     }
 
-void ShowTopScore(){
+void ShowTopScore(){    //Show top score for all levels at once
     vector<Wynik>::iterator it;
     int pager = 0;
     auto list = Wynik::getAllObjects();
@@ -352,7 +370,7 @@ void ShowTopScore(){
     getch();
 } 
 
-void ShowTopScore(int Lev){
+void ShowTopScore(int Lev){    // Shows Top Score for single level
     vector<Wynik>::iterator it;
     int pager = 0;
     auto list = Wynik::getAllObjects();
