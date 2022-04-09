@@ -19,6 +19,7 @@ using namespace std;
 string Nickname {"Player1"};
 bool UseBoold =1;  //config bool to use Bolded letters in terminal
 bool DebugMode =1;  //config bool to set debug mode
+size_t Pager_size =15;
 /// ordinary variables
 int c, ex;
 int escape, GraSkonczona = 0;
@@ -61,6 +62,7 @@ public:
     string Name;
     long int Score;
     int Level;
+    int Rps;
 
     static vector<Wynik> getAllObjects(){
         if(DebugMode) {
@@ -77,6 +79,7 @@ public:
     Wynik(long int Score_param);
     Wynik(long int Score_param, string Name_param);
     Wynik(long int Score_param, string Name_param, int Level_param);
+    Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param);
     ~Wynik();
     void Print();
     void Save();
@@ -88,6 +91,7 @@ Wynik::Wynik(){
     Name = "Default";
     Score = 0;
     Level = 1;
+    Rps = 0;
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing() Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -98,6 +102,7 @@ Wynik::Wynik(){
 Wynik::Wynik(long int Score_param) : Score(Score_param) {
     Name = "Default";
     Level = 1;
+    Rps = 0;
     objList.push_back(*this);
     if(DebugMode) {
     cout << "DEBUG: Constructing(param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -105,6 +110,8 @@ Wynik::Wynik(long int Score_param) : Score(Score_param) {
     }
 }
 Wynik::Wynik(long int Score_param, string Name_param) : Name (Name_param) , Score(Score_param){
+    Level = 1;
+    Rps = 0;
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -114,6 +121,15 @@ Wynik::Wynik(long int Score_param, string Name_param) : Name (Name_param) , Scor
 
 
 Wynik::Wynik(long int Score_param, string Name_param, int Level_param) : Name (Name_param) , Score(Score_param) , Level(Level_param) {
+    Rps = 0;
+    objList.push_back(*this);
+    if(DebugMode) {
+        cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+        cout << "Object push to list adress: " << &objList << endl;
+    }
+}
+
+Wynik::Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param) : Name (Name_param) , Score(Score_param) , Level(Level_param) , Rps(Rps_param) {
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -163,15 +179,21 @@ void Wynik::Print(){
         }
 
         if(UseBoold){
-            cout << "        Level: " << "\e[1m" << this->Level << "\e[0m" << endl;
+            cout << "        Level: " << "\e[1m" << this->Level << "\e[0m";
         } else {
-            cout << "        Level: " << this->Level << endl;
+            cout << "        Level: " << this->Level;
+        }
+
+        if(UseBoold){
+            cout << "     ms/Char: " << "\e[1m" << this->Rps << "\e[0m" << endl;
+        } else {
+            cout << "     ms/Char: " << this->Rps << endl;
         }
 }
 void Wynik::Save(){
         fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
         if (file.is_open()){
-        file << this->Name << " " << this->Score << " " << this->Level << endl;
+        file << this->Name << " " << this->Score << " " << this->Level << " " << this->Rps << endl;
         file.close();
         } else {
             cout << "Cannot open Top Scores file to save.\n";
@@ -182,13 +204,14 @@ void LoadTopScore(){   //Loading top score from file top.txt
     string Name;
     long int Score;
     int Level;
+    int Rps;
     fstream file ("top.txt", std::ofstream::in);
     if (file.is_open()){
         auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
         file.seekg(0);
         for (int i=0; i < Wersy; i++){
-            file >> Name >> Score >> Level;
-            Wynik* set1 = new Wynik (Score, Name, Level);   
+            file >> Name >> Score >> Level >>Rps;
+            Wynik* set1 = new Wynik (Score, Name, Level, Rps);   
         }
     } else {
         cout << "Cannot open Top Scores file to load.\n";
@@ -197,16 +220,18 @@ void LoadTopScore(){   //Loading top score from file top.txt
     file.close();
 }
 void LoadCfgFile(){  //Loading configuration file
-    string Name1, Name2, Name3;
-    string enter1, enter2, enter3;
+    string Name1, Name2, Name3, Name4;
+    string enter1, enter2, enter3, enter4;
     bool val1, val2;
     string val3;
+    size_t val4;
     fstream file ("configuration.cfg", std::ofstream::in);
     if (file.is_open()){
         file.seekg(0);
         file >> Name1 >> enter1 >> val1;
         file >> Name2 >> enter2 >> val2;
         file >> Name3 >> enter3 >> val3;
+        file >> Name4 >> enter4 >> val4;
         if (Name1 == "UseBoold"){
             UseBoold = val1;
         } else {
@@ -222,9 +247,14 @@ void LoadCfgFile(){  //Loading configuration file
                 } else {
                     cout << "Cannot find Nickname value in config file." << endl;
                 }
-                    if(DebugMode) {
-                        cout << "DEBUG: Loading configuration.cfg." << endl;
-                    }  
+                    if (Name4 == "Pager_size"){
+                        Pager_size = val4;
+                    } else {
+                        cout << "Cannot find Pager_size value in config file." << endl;
+                    }
+                        if(DebugMode) {
+                            cout << "DEBUG: Loading configuration.cfg." << endl;
+                        }  
     } else {
         cout << "Cannot open configuration.cfg file to load.\n";
     }
@@ -237,6 +267,7 @@ void SaveCfgFile(){  //Saving configuration file
         file << "UseBoold = " << UseBoold << endl;
         file << "DebugMode = " << DebugMode << endl;
         file << "Nickname = " << Nickname << endl;
+        file << "Pager_size = " << Pager_size << endl;        
             if(DebugMode) {
                 cout << "DEBUG: Saving configuration.cfg." << endl;
             }
@@ -350,7 +381,7 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
                 cout << "Pharse written in: " << Runtime << " ms.\n";
             }
             cout << "Average: " << (Runtime/size(writeword)) << " ms per char" << endl;
-            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev);
+            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev, (Runtime/size(writeword)) );
             new1->Save();
             Sleep(1000);
         } else {
@@ -360,14 +391,14 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
 
 void ShowTopScore(){    //Show top score for all levels at once
     vector<Wynik>::iterator it;
-    int pager = 0;
+    size_t pager = 0;
     auto list = Wynik::getAllObjects();
     clear();
     cout << "--------       TOP SCORE      ----------" << endl;
     for (it = list.begin(); it!=list.end(); ++it ){
         pager++;
         it->Print();
-        if(pager==20){
+        if(pager==Pager_size){
             pager=0;
             cout << "Press any key to show more." << endl;
             getch();
@@ -379,7 +410,7 @@ void ShowTopScore(){    //Show top score for all levels at once
 
 void ShowTopScore(int Lev){    // Shows Top Score for single level
     vector<Wynik>::iterator it;
-    int pager = 0;
+    size_t pager = 0;
     auto list = Wynik::getAllObjects();
     clear();
     cout << "--------       TOP SCORE      ----------" << endl;
@@ -387,7 +418,7 @@ void ShowTopScore(int Lev){    // Shows Top Score for single level
         if(it->Level == Lev){
             pager++;
             it->Print();
-            if(pager==20){
+            if(pager==Pager_size){
                 pager=0;
                 cout << "Press any key to show more." << endl;
                 getch();

@@ -1,26 +1,32 @@
-Kocur 2500 1
-Kocur 12547 2
-Kocur 31766 3
-Kocur 2610 1
-Kocur 2641 1
-Kocur 2828 1
-Kocur 11203 2
-Kocur 13844 2
-Kocur 13140 2
-Kocur 32671 3
-Kocur 30391 3
-Kocur 5562 1
-Kocur 4016 1
-Kocur 9688 2
-Kocur 3188 1
-Kocur 25172 3
-Kocur 2765 1
-Player2 3187 1
-Player2 4016 1
-Player2 2828 1
-Player2 8219 2
-Player2 27484 3
-Test1 2906 1
-Test1 2453 1
-Test1 4563 1
-Test1 2844 1
+Kocur 2250 1 93
+Test1 4468 1 186
+Test1 2437 1 101
+Test1 2016 1 84
+Test1 7750 2 143
+Test1 10031 2 185
+Test1 10656 2 197
+Test1 26109 3 185
+Kocur 2625 1 109
+Kocur 4625 1 192
+Kocur 2953 1 123
+Kocur 3000 1 125
+Kocur 6828 1 284
+Kocur 8141 2 150
+Kocur 8578 2 158
+Kocur 24688 3 175
+Kocur 3985 1 166
+Kocur 2453 1 102
+Kocur 3718 1 154
+Kocur 4828 1 201
+Kocur 5016 1 209
+Kocur 2454 1 102
+Kocur 2484 1 103
+Test1 3578 1 149
+Test1 2156 1 89
+Atylla 2344 1 97
+Atylla 8078 1 336
+Atylla 2172 1 90
+Atylla 6968 2 129
+Atylla 29985 3 212
+Atylla 26750 3 189
+Atylla 29203 3 207
