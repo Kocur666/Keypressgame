@@ -1,34 +1,14 @@
-Kocur 2250 1 93
-Test1 4468 1 186
-Test1 2437 1 101
-Test1 2016 1 84
-Test1 7750 2 143
-Test1 10031 2 185
-Test1 10656 2 197
-Test1 26109 3 185
-Kocur 2625 1 109
-Kocur 4625 1 192
-Kocur 2953 1 123
-Kocur 3000 1 125
-Kocur 6828 1 284
-Kocur 8141 2 150
-Kocur 8578 2 158
-Kocur 24688 3 175
-Kocur 3985 1 166
-Kocur 2453 1 102
-Kocur 3718 1 154
-Kocur 4828 1 201
-Kocur 5016 1 209
-Kocur 2454 1 102
-Kocur 2484 1 103
-Test1 3578 1 149
-Test1 2156 1 89
-Atylla 2344 1 97
-Atylla 8078 1 336
-Atylla 2172 1 90
-Atylla 6968 2 129
-Atylla 29985 3 212
-Atylla 26750 3 189
-Atylla 29203 3 207
-Atylla 22907 3 162
-Kot 2109 1 87
+Kot 2141 1 89 24
+Krotki tekst na poczatek
+Kot 5094 1 212 24
+Krotki tekst na poczatek
+Kot 7313 2 135 54
+Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu
+Kot 35719 3 253 141
+Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu, ktory entuzjastycznie oklaskiwal przeliteraturalizowana i przekarykaturyzowana sztuke
+Kot 2157 1 89 24
+Krotki tekst na poczatek
+Kot 8297 2 153 54
+Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu
+Kot 22562 3 160 141
+Wyindywidualizowalismy sie z rozentuzjazmowanego tlumu, ktory entuzjastycznie oklaskiwal przeliteraturalizowana i przekarykaturyzowana sztuke

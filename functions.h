@@ -63,6 +63,8 @@ public:
     long int Score;
     int Level;
     int Rps;
+    size_t Word_length;
+    string Word_played;
 
     static vector<Wynik> getAllObjects(){
         if(DebugMode) {
@@ -80,6 +82,7 @@ public:
     Wynik(long int Score_param, string Name_param);
     Wynik(long int Score_param, string Name_param, int Level_param);
     Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param);
+    Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param, size_t Word_length_param, string Word_played_param);
     ~Wynik();
     void Print();
     void Save();
@@ -130,6 +133,15 @@ Wynik::Wynik(long int Score_param, string Name_param, int Level_param) : Name (N
 }
 
 Wynik::Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param) : Name (Name_param) , Score(Score_param) , Level(Level_param) , Rps(Rps_param) {
+    objList.push_back(*this);
+    if(DebugMode) {
+        cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
+        cout << "Object push to list adress: " << &objList << endl;
+    }
+}
+
+Wynik::Wynik(long int Score_param, string Name_param, int Level_param, int Rps_param, size_t Word_length_param, string Word_played_param):
+ Name (Name_param) , Score(Score_param) , Level(Level_param) , Rps(Rps_param) , Word_length(Word_length_param) , Word_played(Word_played_param) {
     objList.push_back(*this);
     if(DebugMode) {
         cout << "DEBUG: Constructing(param,param) Class Wynik object: " << this << " with Name: " << this->Name << " and Score: " << this->Score << endl;
@@ -189,11 +201,18 @@ void Wynik::Print(){
         } else {
             cout << "     ms/Char: " << this->Rps << endl;
         }
+
+        if(UseBoold){
+            cout << "Length: " << "\e[1m" << this->Word_length << "\e[0m" << " Played Word: " << this->Word_played << endl;
+        } else {
+            cout << "Length: " <<  this->Word_length << " Played Word: " << this->Word_played << endl;
+        }
 }
 void Wynik::Save(){
         fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
         if (file.is_open()){
-        file << this->Name << " " << this->Score << " " << this->Level << " " << this->Rps << endl;
+        file << this->Name << " " << this->Score << " " << this->Level << " " << this->Rps << " " << this->Word_length << endl;
+        file << this->Word_played << endl;
         file.close();
         } else {
             cout << "Cannot open Top Scores file to save.\n";
@@ -205,13 +224,17 @@ void LoadTopScore(){   //Loading top score from file top.txt
     long int Score;
     int Level;
     int Rps;
+    size_t Word_length{};
+    string Word_played_param{};
     fstream file ("top.txt", std::ofstream::in);
     if (file.is_open()){
         auto Wersy = count(istreambuf_iterator<char>(file), istreambuf_iterator<char>(), '\n');
         file.seekg(0);
-        for (int i=0; i < Wersy; i++){
-            file >> Name >> Score >> Level >>Rps;
-            Wynik* set1 = new Wynik (Score, Name, Level, Rps);   
+        for (int i=0; i < Wersy/2; i++){
+            file >> Name >> Score >> Level >>Rps >> Word_length;
+            file.ignore();
+            getline(file, Word_played_param); 
+            Wynik* set1 = new Wynik (Score, Name, Level, Rps, Word_length, Word_played_param);
         }
     } else {
         cout << "Cannot open Top Scores file to load.\n";
@@ -381,7 +404,7 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
                 cout << "Pharse written in: " << Runtime << " ms.\n";
             }
             cout << "Average: " << (Runtime/size(writeword)) << " ms per char" << endl;
-            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev, (Runtime/size(writeword)) );
+            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev, (Runtime/size(writeword)), size(writeword), writeword);
             new1->Save();
             Sleep(1000);
         } else {
