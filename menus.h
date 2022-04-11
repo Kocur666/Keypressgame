@@ -14,7 +14,8 @@ void SortFileTopScore();
 void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
-
+void InitiateTest();
+void SaveTopScoreToFile();
 void ShowMainMenu(){
 
 clear();
@@ -142,8 +143,13 @@ clear();
             break;
         case 52:
             clear();
-             cout << endl << "Write Your Name:" << endl;  // key 3
-             cin >> Nickname ;
+            cout << endl << "Write Your Name:" << endl;  // key 3
+            cin >> Nickname ;
+            break;
+        case 57:    //Hidden menu 9 - test functions
+            clear();
+            cout << endl << "Test submenu" << endl;  // key 9
+            InitiateTest();
             break;
         case 27:
             clear();

@@ -35,6 +35,7 @@ void PlayGame();
 void ShowMainMenu();
 void ShowTopScore();
 void LoadTopScore();
+void SaveTopScoreToFile();
 std::ostream& bold_on(std::ostream& os)  // bolding terminal characters
 {
 return os << "\e[1m";
@@ -300,6 +301,17 @@ void SaveCfgFile(){  //Saving configuration file
         }
     }
 
+void SaveTopScoreToFile(long int Score_param, string Name_param, int Level_param, int Rps_param, size_t Word_length_param, string Word_played_param){
+        fstream file ("top.txt", std::ofstream::out | std::ofstream::app);
+        if (file.is_open()){
+        file << Name_param << " " << Score_param << " " << Level_param << " " << Rps_param << " " << Word_length_param << endl;
+        file << Word_played_param << endl;
+        file.close();
+        } else {
+            cout << "Cannot open Top Scores file to save.\n";
+        }
+}
+
 vector<Wynik> Wynik::objList; // for Wynik class declaration
 
 void timecheck(DWORD &old){  // checking time passed in ms using windows.h ticker
@@ -370,7 +382,10 @@ void clear() { //Clear screen and go to 0,0 on windows
     }
 }
 
+
+
 void PlayGame(string writeword, int Lev){
+auto objList = Wynik::getAllObjects();
 for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
             clear();
             cout << "Now press: ";
@@ -404,8 +419,10 @@ for(NrLiterki =0; NrLiterki < size(writeword); NrLiterki++) {
                 cout << "Pharse written in: " << Runtime << " ms.\n";
             }
             cout << "Average: " << (Runtime/size(writeword)) << " ms per char" << endl;
-            Wynik *new1 = new Wynik ((Runtime), Nickname, Lev, (Runtime/size(writeword)), size(writeword), writeword);
-            new1->Save();
+            objList.push_back(Wynik((Runtime), Nickname, Lev, (Runtime/size(writeword)), size(writeword), writeword));
+            SaveTopScoreToFile((Runtime), Nickname, Lev, (Runtime/size(writeword)), size(writeword), writeword);
+            //Wynik *new1 = new Wynik ((Runtime), Nickname, Lev, (Runtime/size(writeword)), size(writeword), writeword);
+            //new1->Save();
             Sleep(1000);
         } else {
             cout << "Game was interrupted." << endl;
